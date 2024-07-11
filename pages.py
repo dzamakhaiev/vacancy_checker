@@ -56,10 +56,31 @@ class BasePage:
 class DouVacanciesPage(BasePage):
 
     def get_all_vacancies(self):
-        self.click_on_element(locator=locators.DouLocators.MORE_BUTTON)
-        items = self.find_elements(locator=locators.DouLocators.VACANCIES)
+        vacancies = {}
+        elements = self.find_elements(locator=locators.DouLocators.VACANCIES)
 
-        if items:
-            return items
-        else:
-            return []
+        if elements:
+            for element in elements:
+
+                date = self.find_element(element=element, locator=locators.DouLocators.DATE)
+                date = date.text if date else date
+
+                title = self.find_element(element=element, locator=locators.DouLocators.TITLE)
+                url = self.find_element(element=title, locator=locators.DouLocators.URL)
+                vacancy_title = url.text
+                url = url.get_attribute('href')
+                vacancy_id = url.split('/')[-2]
+
+                company = self.find_element(element=title, locator=locators.DouLocators.COMPANY)
+                company = self.find_element(element=company, locator=locators.DouLocators.COMPANY_NAME)
+                company = company.text
+
+                cities = self.find_element(element=title, locator=locators.DouLocators.CITIES)
+                cities = cities.text
+                info = self.find_element(element=element, locator=locators.DouLocators.INFO)
+                info = info.text if info else info
+
+                vacancies.update({vacancy_id: {'url': url, 'date': date, 'title': vacancy_title, 'cities': cities,
+                                               'info': info, 'company': company}})
+
+        return vacancies
