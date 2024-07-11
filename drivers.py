@@ -11,13 +11,16 @@ class BaseDriver:
             cls.instance = super().__new__(cls, *args, **kwargs)
         return cls.instance
 
-    def __init__(self, driver: (webdriver.Chrome, webdriver.Edge)):
+    def __init__(self, driver: (webdriver.Chrome,)):
         self.driver = driver
         self.driver.implicitly_wait(5)
         self.driver.maximize_window()
 
     def get_driver(self) -> webdriver.Chrome:
         return self.driver
+
+    def __del__(self):
+        self.driver.quit()
 
 
 class ChromeDriver(BaseDriver):
