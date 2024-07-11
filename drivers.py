@@ -16,6 +16,9 @@ class BaseDriver:
         self.driver.implicitly_wait(5)
         self.driver.maximize_window()
 
+    def get_driver(self) -> webdriver.Chrome:
+        return self.driver
+
 
 class ChromeDriver(BaseDriver):
 
