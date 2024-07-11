@@ -1,7 +1,6 @@
 from time import sleep
+from datetime import date
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
-from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.common.keys import Keys
 from drivers import ChromeDriver
 import locators
 
@@ -62,8 +61,15 @@ class DouVacanciesPage(BasePage):
         if elements:
             for element in elements:
 
-                date = self.find_element(element=element, locator=locators.DouLocators.DATE)
-                date = date.text if date else date
+                vacancy_date = self.find_element(element=element, locator=locators.DouLocators.DATE)
+                vacancy_date = vacancy_date.text
+                vacancy_day = int(vacancy_date.split(' ')[0])
+                current_date = date.today()
+
+                if vacancy_day > current_date.day:
+                    vacancy_date = date(year=current_date.year, month=current_date.month-1, day=vacancy_day)
+                else:
+                    vacancy_date = date(year=current_date.year, month=current_date.month, day=vacancy_day)
 
                 title = self.find_element(element=element, locator=locators.DouLocators.TITLE)
                 url = self.find_element(element=title, locator=locators.DouLocators.URL)
@@ -80,7 +86,7 @@ class DouVacanciesPage(BasePage):
                 info = self.find_element(element=element, locator=locators.DouLocators.INFO)
                 info = info.text if info else info
 
-                vacancies.update({vacancy_id: {'url': url, 'date': date, 'title': vacancy_title, 'cities': cities,
-                                               'info': info, 'company': company}})
+                vacancies.update({vacancy_id: {'url': url, 'date': vacancy_date, 'title': vacancy_title,
+                                               'cities': cities, 'info': info, 'company': company}})
 
         return vacancies
