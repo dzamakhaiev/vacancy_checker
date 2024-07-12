@@ -80,6 +80,7 @@ class DouVacanciesPage(BasePage):
                 company = self.find_element(element=title, locator=locators.DouLocators.COMPANY)
                 company = self.find_element(element=company, locator=locators.DouLocators.COMPANY_NAME)
                 company = company.text
+                company = company.strip()
 
                 cities = self.find_element(element=title, locator=locators.DouLocators.CITIES)
                 cities = cities.text
