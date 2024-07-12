@@ -1,4 +1,5 @@
 .idea
 venv
 vacancies.db
+logs
 email_data.txt
