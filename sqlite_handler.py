@@ -9,7 +9,7 @@ class DatabaseHandler:
 
     def __init__(self):
         try:
-            self.conn = sqlite3.connect('vacancies.db')
+            self.conn = sqlite3.connect('database/vacancies.db')
             self.cursor = self.conn.cursor()
             self.create_vacancies_table()
             logger.info('SQLite database connection opened.')
