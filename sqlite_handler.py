@@ -54,6 +54,15 @@ class DatabaseHandler:
         result = self.cursor_execute('SELECT * FROM vacancies ORDER BY date DESC')
         if result:
             return result.fetchall()
+        else:
+            return []
+
+    def get_not_notified_vacancies(self):
+        result = self.cursor_execute('SELECT * FROM vacancies WHERE notified = 0')
+        if result:
+            return result.fetchall()
+        else:
+            return []
 
     def check_vacancy(self, vacancy_id):
         result = self.cursor_execute('SELECT * FROM vacancies WHERE vacancy_id = ?', (vacancy_id,))
@@ -76,6 +85,9 @@ class DatabaseHandler:
 
         self.cursor_with_commit('INSERT OR IGNORE INTO vacancies (vacancy_id, title, company, info, cities, date)'
                                 ' VALUES (?, ?, ?, ?, ?, ?)', args=args, many=True)
+
+    def change_vacancy_notify_state(self, vacancy_id):
+        self.cursor_with_commit('UPDATE vacancies SET notified = 1 WHERE vacancy_id = ?', (vacancy_id,))
 
     def __del__(self):
         if self.conn and self.cursor:
