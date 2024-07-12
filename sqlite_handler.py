@@ -12,6 +12,9 @@ class DatabaseHandler:
             quit(e)
 
     def cursor_execute(self, query, args=None):
+        if args is None:
+            args = tuple()
+
         try:
             result = self.cursor.execute(query, args)
             return result
@@ -47,10 +50,17 @@ class DatabaseHandler:
                     notified BOOLEAN DEFAULT 0)
                     ''')
 
-    def get_vacancies(self, limit=10):
-        result = self.cursor_execute('SELECT * FROM vacancies ORDER BY date DESC LIMIT ?', args=(limit,))
+    def get_vacancies(self):
+        result = self.cursor_execute('SELECT * FROM vacancies ORDER BY date DESC')
         if result:
             return result.fetchall()
+
+    def check_vacancy(self, vacancy_id):
+        result = self.cursor_execute('SELECT * FROM vacancies WHERE vacancy_id = ?', (vacancy_id,))
+        if result:
+            return True
+        else:
+            return False
 
     def insert_vacancy(self, vacancy_id: str, vacancy_dict: dict):
         self.cursor_with_commit('INSERT OR IGNORE INTO vacancies (vacancy_id, title, company, info, cities, date)'
