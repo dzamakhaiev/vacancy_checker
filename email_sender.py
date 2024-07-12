@@ -1,6 +1,10 @@
 import os
 import smtplib
 from email.mime.text import MIMEText
+from logger import Logger
+
+
+logger = Logger('sender')
 
 
 SENDER_EMAIL = 'vacancy.notification@demomailtrap.com'
@@ -17,6 +21,7 @@ def read_email_data(f_path='email_data.txt'):
     password: password from mailtrap
     receiver_email: email.to.send@gmail.com
     """
+    logger.info('Read email data file.')
 
     if os.path.isfile(f_path):
         with open(f_path, 'r') as file:
@@ -26,6 +31,7 @@ def read_email_data(f_path='email_data.txt'):
             global RECEIVER_EMAIL, PASSWORD
             PASSWORD = email_data.get('password')
             RECEIVER_EMAIL = email_data.get('receiver_email')
+            logger.info('Email data file parsed.')
 
 
 # Get data from file
@@ -33,6 +39,7 @@ read_email_data()
 
 
 def send_email(website, body):
+    logger.info(f'Try to send email with new vacancy on "{website}"')
     msg = MIMEText(body)
     msg['Subject'] = SUBJECT.format(website)
     msg['From'] = SENDER_EMAIL
@@ -40,13 +47,18 @@ def send_email(website, body):
 
     try:
         with smtplib.SMTP('live.smtp.mailtrap.io', 587) as server:
+
             server.starttls()
             server.login('api', PASSWORD)
             server.sendmail(SENDER_EMAIL, [RECEIVER_EMAIL], msg.as_string())
+
+            logger.info(f'Email has been sent to: {RECEIVER_EMAIL}')
+            logger.debug(f'Email subject:{SUBJECT.format(website)}')
+            logger.debug(body)
             return True
 
     except Exception as e:
-        print(e)
+        logger.error(e)
         return False
 
 

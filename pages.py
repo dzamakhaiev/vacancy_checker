@@ -3,6 +3,10 @@ from datetime import date
 from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
 from drivers import ChromeDriver
 import locators
+from logger import Logger
+
+
+logger = Logger('pages')
 
 
 def no_such_element_exception(find):
@@ -10,7 +14,7 @@ def no_such_element_exception(find):
         try:
             return find(self, *args, **kwargs)
         except (NoSuchElementException, StaleElementReferenceException) as e:
-            print(e)
+            logger.error(e)
             return None
 
     return wrap
@@ -23,6 +27,7 @@ class BasePage:
         self.driver = chrome_driver.get_driver()
 
     def go_to(self, url):
+        logger.info(f'Go to url: {url}')
         try:
             self.driver.get(url)
         except TimeoutException:
@@ -30,6 +35,8 @@ class BasePage:
 
     @no_such_element_exception
     def find_element(self, locator, element=None):
+        logger.debug(f'Find element with locator "{locator}". Element provided: {element}')
+
         if not element:
             return self.driver.find_element(*locator)
         else:
@@ -37,6 +44,7 @@ class BasePage:
 
     @no_such_element_exception
     def find_elements(self, locator, element=None):
+        logger.debug(f'Find elements with locator "{locator}". Element provided: {element}')
 
         if not element:
             return self.driver.find_elements(*locator)
@@ -44,6 +52,8 @@ class BasePage:
             return element.find_elements(*locator)
 
     def click_on_element(self, locator, element=None):
+        logger.debug(f'Click on element with locator "{locator}". Element provided: {element}')
+
         if not element:
             element = self.driver.find_element(*locator)
 
@@ -55,10 +65,13 @@ class BasePage:
 class DouVacanciesPage(BasePage):
 
     def get_all_vacancies(self):
+        logger.info('Collect all vacancies from current page.')
         vacancies = {}
         elements = self.find_elements(locator=locators.DouLocators.VACANCIES)
 
         if elements:
+            logger.info('Parse all found elements on current page.')
+
             for element in elements:
 
                 vacancy_date = self.find_element(element=element, locator=locators.DouLocators.DATE)
@@ -90,4 +103,5 @@ class DouVacanciesPage(BasePage):
                 vacancies.update({vacancy_id: {'url': url, 'date': vacancy_date, 'title': vacancy_title,
                                                'cities': cities, 'info': info, 'company': company}})
 
+        logger.info('Elements parsed.')
         return vacancies

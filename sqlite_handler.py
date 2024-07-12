@@ -1,4 +1,8 @@
 import sqlite3
+from logger import Logger
+
+
+logger = Logger('database')
 
 
 class DatabaseHandler:
@@ -8,10 +12,14 @@ class DatabaseHandler:
             self.conn = sqlite3.connect('vacancies.db')
             self.cursor = self.conn.cursor()
             self.create_vacancies_table()
+            logger.info('SQLite database connection opened.')
+
         except sqlite3.Error as e:
+            logger.error(e)
             quit(e)
 
     def cursor_execute(self, query, args=None):
+        logger.debug(f'Query for execute: {query}\nWith args: {args}')
         if args is None:
             args = tuple()
 
@@ -20,10 +28,11 @@ class DatabaseHandler:
             return result
 
         except sqlite3.DatabaseError as e:
-            print(e)
+            logger.error(e)
             self.conn.rollback()
 
     def cursor_with_commit(self, query, args=None, many=False):
+        logger.debug(f'Query for commit: {query}\nWith args: {args}')
         if args is None:
             args = []
 
@@ -37,10 +46,11 @@ class DatabaseHandler:
             self.conn.commit()
 
         except sqlite3.DatabaseError as e:
-            print(e)
+            logger.error(e)
             self.conn.rollback()
 
     def create_vacancies_table(self):
+        logger.info('Table for vacancies created.')
         self.cursor.execute('''
                     CREATE TABLE IF NOT EXISTS vacancies
                     (vacancy_id TEXT NOT NULL UNIQUE,
@@ -104,3 +114,4 @@ class DatabaseHandler:
         if self.conn and self.cursor:
             self.cursor.close()
             self.conn.close()
+            logger.info('SQLite database connection closed.')

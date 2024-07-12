@@ -1,5 +1,9 @@
 from selenium import webdriver
 from latest_user_agents import get_random_user_agent
+from logger import Logger
+
+
+logger = Logger('driver')
 
 
 class BaseDriver:
@@ -12,6 +16,7 @@ class BaseDriver:
         return cls.instance
 
     def __init__(self, driver: (webdriver.Chrome,)):
+        logger.info('Initiate driver.')
         self.driver = driver
         self.driver.implicitly_wait(5)
         self.driver.maximize_window()
@@ -21,6 +26,7 @@ class BaseDriver:
 
     def __del__(self):
         self.driver.quit()
+        logger.info('Driver closed.')
 
 
 class ChromeDriver(BaseDriver):
@@ -33,5 +39,6 @@ class ChromeDriver(BaseDriver):
         options.add_argument("--disable-blink-features=AutomationControlled")
         options.add_experimental_option('excludeSwitches', ['enable-automation'])
         driver = webdriver.Chrome(service=service, options=options)
-        super().__init__(driver)
 
+        super().__init__(driver)
+        logger.info('Chrome driver started.')
