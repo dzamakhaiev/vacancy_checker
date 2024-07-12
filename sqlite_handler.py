@@ -30,6 +30,8 @@ class DatabaseHandler:
         try:
             if many:
                 self.cursor.executemany(query, args)
+            elif query.startswith('DELETE'):
+                self.cursor.execute(query)
             else:
                 self.cursor.execute(query, args)
             self.conn.commit()
@@ -93,6 +95,10 @@ class DatabaseHandler:
 
     def change_vacancy_notify_state(self, vacancy_id):
         self.cursor_with_commit('UPDATE vacancies SET notified = 1 WHERE vacancy_id = ?', (vacancy_id,))
+
+    def delete_outdated_vacancies(self, days=30):
+        self.cursor_with_commit(
+            f"DELETE FROM vacancies WHERE DATE(date) < DATE('now', '-{days} days')")
 
     def __del__(self):
         if self.conn and self.cursor:
