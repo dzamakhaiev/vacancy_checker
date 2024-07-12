@@ -17,10 +17,11 @@ def send_email(website, body):
         with smtplib.SMTP('sandbox.smtp.mailtrap.io', 2525) as server:
             server.login('306e2f7d4d9c82', '5cb64a420b68da')
             server.sendmail(SENDER_EMAIL, [RECEIVER_EMAIL], msg.as_string())
-            print("Email sent successfully!")
+            return True
 
     except Exception as e:
         print(e)
+        return False
 
 
 if __name__ == '__main__':
