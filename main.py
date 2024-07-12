@@ -1,12 +1,10 @@
 from time import sleep
-from datetime import date, timedelta
 from urls_to_check import URLS_TO_CHECK
 from sqlite_handler import DatabaseHandler
 from email_sender import send_email
 
 
 db_handler = DatabaseHandler()
-OUTDATED_DELTA = timedelta(days=30)
 
 
 def filter_vacancies(vacancies: dict):
