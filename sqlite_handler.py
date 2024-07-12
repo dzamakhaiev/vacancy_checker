@@ -47,6 +47,7 @@ class DatabaseHandler:
                     info TEXT NOT NULL,
                     cities TEXT,
                     date TEXT,
+                    url TEXT,
                     notified BOOLEAN DEFAULT 0)
                     ''')
 
@@ -72,19 +73,23 @@ class DatabaseHandler:
             return False
 
     def insert_vacancy(self, vacancy_id: str, vacancy_dict: dict):
-        self.cursor_with_commit('INSERT OR IGNORE INTO vacancies (vacancy_id, title, company, info, cities, date)'
-                                ' VALUES (?, ?, ?, ?, ?, ?)',
+        self.cursor_with_commit('INSERT OR IGNORE INTO vacancies '
+                                '(vacancy_id, title, company, info, cities, date, url)'
+                                ' VALUES (?, ?, ?, ?, ?, ?, ?)',
                                 (vacancy_id, vacancy_dict.get('title'), vacancy_dict.get('company'),
-                                 vacancy_dict.get('info'), vacancy_dict.get('cities'), vacancy_dict.get('date')))
+                                 vacancy_dict.get('info'), vacancy_dict.get('cities'), vacancy_dict.get('date'),
+                                 vacancy_dict.get('url')))
 
     def insert_vacancies(self, vacancies: dict):
         args = []
         for vacancy_id, vacancy_dict in vacancies.items():
             args.append((vacancy_id, vacancy_dict.get('title'), vacancy_dict.get('company'),
-                         vacancy_dict.get('info'), vacancy_dict.get('cities'), vacancy_dict.get('date')))
+                         vacancy_dict.get('info'), vacancy_dict.get('cities'), vacancy_dict.get('date'),
+                         vacancy_dict.get('url')))
 
-        self.cursor_with_commit('INSERT OR IGNORE INTO vacancies (vacancy_id, title, company, info, cities, date)'
-                                ' VALUES (?, ?, ?, ?, ?, ?)', args=args, many=True)
+        self.cursor_with_commit('INSERT OR IGNORE INTO vacancies '
+                                '(vacancy_id, title, company, info, cities, date, url)'
+                                ' VALUES (?, ?, ?, ?, ?, ?, ?)', args=args, many=True)
 
     def change_vacancy_notify_state(self, vacancy_id):
         self.cursor_with_commit('UPDATE vacancies SET notified = 1 WHERE vacancy_id = ?', (vacancy_id,))
