@@ -1,5 +1,5 @@
 .idea
 venv
-database/vacancies.db
+database
 logs
 email_data.txt
