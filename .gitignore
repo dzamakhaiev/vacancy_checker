@@ -1,4 +1,4 @@
 .idea
 venv
 vacancies.db
-creds.txt
+email_data.txt
