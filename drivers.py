@@ -35,11 +35,8 @@ class ChromeDriver(BaseDriver):
 
     def __init__(self):
         logger.info(f'Platform: {platform.system()}: {platform.release()}')
-        if platform.system().startswith('Linux'):
-            service = webdriver.ChromeService(executable_path='drivers/chromedriver')
-        else:
-            service = webdriver.ChromeService()
 
+        service = webdriver.ChromeService()
         options = webdriver.ChromeOptions()
         options.add_argument("--headless=new")
         options.add_argument(f'user-agent={get_random_user_agent()}')
