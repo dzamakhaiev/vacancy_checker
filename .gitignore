@@ -2,5 +2,4 @@
 venv
 database
 logs
-drivers
 email_data.txt
