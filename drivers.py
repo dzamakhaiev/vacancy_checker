@@ -1,5 +1,6 @@
 import platform
 from selenium import webdriver
+from webdriver_manager.chrome import ChromeDriverManager
 from latest_user_agents import get_random_user_agent
 from logger import Logger
 
@@ -36,7 +37,9 @@ class ChromeDriver(BaseDriver):
     def __init__(self):
         logger.info(f'Platform: {platform.system()}: {platform.release()}')
         if platform.system().startswith('Linux'):
-            service = webdriver.ChromeService(executable_path='/usr/bin/chromedriver')
+            manager = ChromeDriverManager()
+            driver_path = manager.install()
+            service = webdriver.ChromeService(executable_path=driver_path)
         else:
             service = webdriver.ChromeService()
 
