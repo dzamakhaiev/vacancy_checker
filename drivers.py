@@ -25,8 +25,9 @@ class BaseDriver:
         return self.driver
 
     def __del__(self):
-        self.driver.quit()
-        logger.info('Driver closed.')
+        if hasattr(self, 'driver'):
+            self.driver.quit()
+            logger.info('Driver closed.')
 
 
 class ChromeDriver(BaseDriver):
