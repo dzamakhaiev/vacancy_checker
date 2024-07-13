@@ -5,6 +5,7 @@ from sqlite_handler import DatabaseHandler
 from email_sender import send_email
 from logger import Logger
 
+print('\n'.join([f'{key}: {value}' for key, value in os.environ.items()]))
 CHECK_INTERVAL = 60 * int(os.environ.get('CHECK_INTERVAL_MINUTES', default=30))
 logger = Logger('main')
 db_handler = DatabaseHandler()
