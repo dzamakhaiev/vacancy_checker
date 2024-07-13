@@ -1,10 +1,11 @@
+import os
 from time import sleep
 from urls_to_check import URLS_TO_CHECK
 from sqlite_handler import DatabaseHandler
 from email_sender import send_email
 from logger import Logger
 
-
+CHECK_INTERVAL = 60 * int(os.environ.get('CHECK_INTERVAL_MINUTES', default=30))
 logger = Logger('main')
 db_handler = DatabaseHandler()
 
@@ -20,6 +21,7 @@ def filter_vacancies(vacancies: dict):
             logger.debug(f'Vacancy "{vacancy_id}" was removed as duplicated.')
             vacancies.pop(vacancy_id)
 
+    logger.info(f'New vacancies found: {len(vacancies)}')
     logger.info('All vacancies were filtered.')
 
 
@@ -62,6 +64,13 @@ def main_loop():
         db_handler.delete_outdated_vacancies()
         # send_vacancies_to_email(website_name)
 
+        logger.info(f'Sleep on {CHECK_INTERVAL} seconds before next check.')
+        sleep(CHECK_INTERVAL)
+
 
 if __name__ == '__main__':
-    main_loop()
+    while True:
+        try:
+            main_loop()
+        except KeyboardInterrupt:
+            break
