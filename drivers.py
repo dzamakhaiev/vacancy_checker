@@ -35,9 +35,12 @@ class ChromeDriver(BaseDriver):
 
     def __init__(self):
         logger.info(f'Platform: {platform.system()}: {platform.release()}')
-        service = webdriver.ChromeService()
-        options = webdriver.ChromeOptions()
+        if platform.system().startswith('Linux'):
+            service = webdriver.ChromeService(executable_path='/usr/bin/chromedriver')
+        else:
+            service = webdriver.ChromeService()
 
+        options = webdriver.ChromeOptions()
         options.add_argument("--headless=new")
         options.add_argument(f'user-agent={get_random_user_agent()}')
         options.add_argument("--disable-blink-features=AutomationControlled")
