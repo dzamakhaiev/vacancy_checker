@@ -1,5 +1,5 @@
+import platform
 from selenium import webdriver
-from webdriver_manager.chrome import ChromeDriverManager
 from latest_user_agents import get_random_user_agent
 from logger import Logger
 
@@ -34,12 +34,8 @@ class BaseDriver:
 class ChromeDriver(BaseDriver):
 
     def __init__(self):
-        logger.info('Download chromedriver.')
-        manager = ChromeDriverManager()
-        driver_path = manager.install()
-
-        logger.info(f'Chromedriver path: {driver_path}')
-        service = webdriver.ChromeService(executable_path=driver_path)
+        logger.info(f'Platform: {platform.system()}: {platform.release()}')
+        service = webdriver.ChromeService()
         options = webdriver.ChromeOptions()
 
         options.add_argument("--headless=new")
