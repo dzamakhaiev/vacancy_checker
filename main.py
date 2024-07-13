@@ -9,8 +9,9 @@ from logger import Logger
 logger = Logger('main')
 db_handler = DatabaseHandler()
 CHECK_INTERVAL = 60 * int(os.environ.get('CHECK_INTERVAL_MINUTES', default=30))
-logger.info(f'Interval between checks: {CHECK_INTERVAL} seconds. '
-            f'ENV variable: {os.environ.get('CHECK_INTERVAL_MINUTES')}')
+msg = 'Interval between checks: {} seconds. ENV variable: {}'.format(
+    CHECK_INTERVAL, os.environ.get('CHECK_INTERVAL_MINUTES'))
+logger.info(msg)
 
 
 def filter_vacancies(vacancies: dict):
