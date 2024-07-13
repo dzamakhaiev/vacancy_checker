@@ -13,4 +13,4 @@ ENV CHECK_INTERVAL_MINUTES 5
 WORKDIR /vacancy_checker
 RUN sudo pip3 install -r requirements.txt
 COPY email_data.txt email_data.txt
-CMD sudo python3 main.py
+CMD sudo git pull && sudo python3 main.py
