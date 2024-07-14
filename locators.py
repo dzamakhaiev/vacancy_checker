@@ -15,6 +15,8 @@ class DouLocators(BaseLocators):
     URL = (By.CLASS_NAME, 'vt')
     LOCATIONS = (By.CLASS_NAME, 'cities')
     INFO = (By.CLASS_NAME, 'sh-info')
+    DETAILS_SECTION = (By.CLASS_NAME, 'vacancy-section')
+    DETAILS = (By.TAG_NAME, 'li')
 
 
 class LuxoftLocators(BaseLocators):
@@ -23,3 +25,6 @@ class LuxoftLocators(BaseLocators):
     TITLE = (By.CLASS_NAME, 'subtitle-l')
     URL = (By.CLASS_NAME, 'vt')
     LOCATIONS = (By.CLASS_NAME, 'jobs__list__job__details__tags__location')
+    DATE = (By.XPATH, '/html/body/div[10]/div[1]/div[4]/p')
+    RESPONSIBILITIES = (By.CLASS_NAME, 'job__grid__about-job__responsabilities__list__item')
+    SKILLS = (By.CLASS_NAME, 'job__grid__about-job__skills__list__item')
