@@ -66,7 +66,7 @@ def main_loop():
         filter_vacancies(vacancies)
         db_handler.insert_vacancies(vacancies)
         db_handler.delete_outdated_vacancies()
-        send_vacancies_to_email(website_name)
+        # send_vacancies_to_email(website_name)
 
         logger.info(f'Sleep on {CHECK_INTERVAL} seconds before next check.')
 
