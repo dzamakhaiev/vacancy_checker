@@ -1,6 +1,7 @@
 from time import sleep
 from datetime import date
-from selenium.common.exceptions import NoSuchElementException, StaleElementReferenceException, TimeoutException
+from selenium.common.exceptions import (NoSuchElementException, StaleElementReferenceException,
+                                        TimeoutException, WebDriverException)
 from drivers import ChromeDriver
 import locators
 from logger import Logger
@@ -69,15 +70,19 @@ class DouVacanciesPage(BasePage):
 
         for vacancy_id, vacancy_dict in vacancies.items():
             url = vacancy_dict.get('url')
-            self.go_to(url)
+            try:
+                self.go_to(url)
 
-            info = vacancy_dict.get('info')
-            details_section = self.find_element(locator=locators.DouLocators.DETAILS_SECTION)
+                info = vacancy_dict.get('info')
+                details_section = self.find_element(locator=locators.DouLocators.DETAILS_SECTION)
 
-            info += '\nDETAILS:\n'
-            elements = self.find_elements(element=details_section, locator=locators.DouLocators.DETAILS)
-            info += '\n'.join([element.text for element in elements])
-            vacancies[vacancy_id]['info'] = info
+                info += '\nDETAILS:\n'
+                elements = self.find_elements(element=details_section, locator=locators.DouLocators.DETAILS)
+                info += '\n'.join([element.text for element in elements])
+                vacancies[vacancy_id]['info'] = info
+
+            except WebDriverException as e:
+                logger.error(e)
 
         logger.info('Details parsed.')
 
