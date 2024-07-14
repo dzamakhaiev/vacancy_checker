@@ -31,6 +31,7 @@ class BasePage:
     def set_driver(self):
         driver = self.driver_class()
         self.driver = driver.get_driver()
+        sleep(1)
 
     def go_to(self, url):
         logger.info(f'Go to url: {url}')

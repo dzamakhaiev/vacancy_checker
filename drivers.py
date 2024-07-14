@@ -19,7 +19,7 @@ class BaseDriver:
     def __init__(self, driver: (webdriver.Chrome,)):
         logger.info('Initiate driver.')
         self.driver = driver
-        self.driver.implicitly_wait(5)
+        self.driver.implicitly_wait(10)
         self.driver.maximize_window()
 
     def get_driver(self) -> webdriver.Chrome:
