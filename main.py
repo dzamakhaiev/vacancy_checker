@@ -68,13 +68,12 @@ def main_loop():
         db_handler.delete_outdated_vacancies()
         # send_vacancies_to_email(website_name)
 
-        logger.info(f'Sleep on {CHECK_INTERVAL} seconds before next check.')
-
 
 if __name__ == '__main__':
     while True:
         try:
             main_loop()
+            logger.info(f'Sleep on {CHECK_INTERVAL} seconds before next check.')
             sleep(CHECK_INTERVAL)
         except KeyboardInterrupt:
             break
