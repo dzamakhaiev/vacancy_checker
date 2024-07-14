@@ -41,6 +41,7 @@ class ChromeDriver(BaseDriver):
         options.add_argument('--headless=new')
         options.add_argument('--no-sandbox')
         options.add_argument(f'user-agent={get_random_user_agent()}')
+        options.add_argument('--disable-dev-shm-usage')
         options.add_argument('--disable-blink-features=AutomationControlled')
         options.add_experimental_option('excludeSwitches', ['enable-automation'])
         driver = webdriver.Chrome(service=service, options=options)
