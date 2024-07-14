@@ -64,6 +64,23 @@ class BasePage:
 
 class DouVacanciesPage(BasePage):
 
+    def vacancy_details(self, vacancies: dict):
+        logger.info('Parse vacancy details.')
+
+        for vacancy_id, vacancy_dict in vacancies.items():
+            url = vacancy_dict.get('url')
+            self.go_to(url)
+
+            info = vacancy_dict.get('info')
+            details_section = self.find_element(locator=locators.DouLocators.DETAILS_SECTION)
+
+            info += '\nDETAILS:\n'
+            elements = self.find_elements(element=details_section, locator=locators.DouLocators.DETAILS)
+            info += '\n'.join([element.text for element in elements])
+            vacancies[vacancy_id]['info'] = info
+
+        logger.info('Details parsed.')
+
     def get_all_vacancies(self):
         logger.info('Collect all vacancies from current page.')
         vacancies = {}
@@ -104,6 +121,7 @@ class DouVacanciesPage(BasePage):
                                                'locations': locations, 'info': info, 'company': company}})
 
         logger.info('Elements parsed.')
+        self.vacancy_details(vacancies)
         return vacancies
 
 
@@ -117,11 +135,11 @@ class LuxoftVacanciesPage(BasePage):
             self.go_to(url)
 
             info = vacancy_dict.get('info')
-            info += '\nResponsibilities\n'
+            info += '\nResponsibilities:\n'
             elements = self.find_elements(locator=locators.LuxoftLocators.RESPONSIBILITIES)
             info += '\n'.join([element.text for element in elements])
 
-            info += '\nSkills\n'
+            info += '\nSkills:\n'
             elements = self.find_elements(locator=locators.LuxoftLocators.SKILLS)
             info += '\n'.join([element.text for element in elements])
             vacancies[vacancy_id]['info'] = info
