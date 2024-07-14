@@ -31,6 +31,7 @@ class BasePage:
         logger.info(f'Go to url: {url}')
         try:
             self.driver.get(url)
+            sleep(1)
         except TimeoutException:
             quit(f'Cannot load page: {url}')
 
@@ -137,22 +138,27 @@ class LuxoftVacanciesPage(BasePage):
 
         for vacancy_id, vacancy_dict in vacancies.items():
             url = vacancy_dict.get('url')
-            self.go_to(url)
 
-            info = vacancy_dict.get('info')
-            info += '\nResponsibilities:\n'
-            elements = self.find_elements(locator=locators.LuxoftLocators.RESPONSIBILITIES)
-            info += '\n'.join([element.text for element in elements])
+            try:
+                self.go_to(url)
 
-            info += '\nSkills:\n'
-            elements = self.find_elements(locator=locators.LuxoftLocators.SKILLS)
-            info += '\n'.join([element.text for element in elements])
-            vacancies[vacancy_id]['info'] = info
+                info = vacancy_dict.get('info')
+                info += '\nResponsibilities:\n'
+                elements = self.find_elements(locator=locators.LuxoftLocators.RESPONSIBILITIES)
+                info += '\n'.join([element.text for element in elements])
 
-            vacancy_date = self.find_element(locator=locators.LuxoftLocators.DATE).text
-            vacancy_date = vacancy_date.split('/')[::-1]
-            vacancy_date = date(year=int(vacancy_date[0]), month=int(vacancy_date[1]), day=int(vacancy_date[2]))
-            vacancies[vacancy_id]['date'] = vacancy_date
+                info += '\nSkills:\n'
+                elements = self.find_elements(locator=locators.LuxoftLocators.SKILLS)
+                info += '\n'.join([element.text for element in elements])
+                vacancies[vacancy_id]['info'] = info
+
+                vacancy_date = self.find_element(locator=locators.LuxoftLocators.DATE).text
+                vacancy_date = vacancy_date.split('/')[::-1]
+                vacancy_date = date(year=int(vacancy_date[0]), month=int(vacancy_date[1]), day=int(vacancy_date[2]))
+                vacancies[vacancy_id]['date'] = vacancy_date
+
+            except WebDriverException as e:
+                logger.error(e)
 
     logger.info('Details parsed.')
 
