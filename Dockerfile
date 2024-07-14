@@ -1,5 +1,5 @@
 FROM selenium/standalone-chrome
-ENV CHECK_INTERVAL_MINUTES 5
+ENV CHECK_INTERVAL_MINUTES 30
 
 RUN sudo apt-get update
 RUN sudo apt-get install git -y
