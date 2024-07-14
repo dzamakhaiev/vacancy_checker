@@ -64,6 +64,7 @@ def main_loop():
 
         logger.info('Process found vacancies: filter, insert new ones and remove old ones.')
         filter_vacancies(vacancies)
+        page.vacancy_details(vacancies)
         db_handler.insert_vacancies(vacancies)
         db_handler.delete_outdated_vacancies()
         send_vacancies_to_email(website_name)

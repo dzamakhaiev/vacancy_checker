@@ -134,7 +134,6 @@ class DouVacanciesPage(BasePage):
                                                'locations': locations, 'info': info, 'company': company}})
 
         logger.info('Elements parsed.')
-        self.vacancy_details(vacancies)
         return vacancies
 
 
@@ -192,6 +191,4 @@ class LuxoftVacanciesPage(BasePage):
                                                'locations': locations, 'info': '', 'company': 'luxoft'}})
 
         logger.info('Elements parsed.')
-
-        self.vacancy_details(vacancies)
         return vacancies
