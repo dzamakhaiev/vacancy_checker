@@ -24,8 +24,13 @@ def no_such_element_exception(find):
 class BasePage:
 
     def __init__(self, driver: (ChromeDriver,)):
-        chrome_driver = driver()
-        self.driver = chrome_driver.get_driver()
+        self.driver = None
+        self.driver_class = driver
+        self.set_driver()
+
+    def set_driver(self):
+        driver = self.driver_class()
+        self.driver = driver.get_driver()
 
     def go_to(self, url):
         logger.info(f'Go to url: {url}')
@@ -84,6 +89,7 @@ class DouVacanciesPage(BasePage):
 
             except WebDriverException as e:
                 logger.error(e)
+                self.set_driver()
 
         logger.info('Details parsed.')
 
@@ -159,6 +165,7 @@ class LuxoftVacanciesPage(BasePage):
 
             except WebDriverException as e:
                 logger.error(e)
+                self.set_driver()
 
     logger.info('Details parsed.')
 
