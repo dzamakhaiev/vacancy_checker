@@ -1,6 +1,6 @@
 import sqlite3
+from datetime import date
 from logger import Logger
-
 
 logger = Logger('database')
 
@@ -50,18 +50,19 @@ class DatabaseHandler:
             self.conn.rollback()
 
     def create_vacancies_table(self):
-        logger.info('Table for vacancies created.')
-        self.cursor.execute('''
+        logger.info('Created vacancies table.')
+        self.cursor.execute(f'''
                     CREATE TABLE IF NOT EXISTS vacancies
                     (vacancy_id TEXT NOT NULL UNIQUE,
                     title TEXT NOT NULL,
                     company TEXT NOT NULL,
                     info TEXT NOT NULL,
-                    cities TEXT,
-                    date TEXT,
+                    locations TEXT,
+                    date TEXT DEFAULT (date('now', 'localtime')),
                     url TEXT,
                     notified BOOLEAN DEFAULT 0)
                     ''')
+        logger.info('Table for vacancies created.')
 
     def get_vacancies(self):
         result = self.cursor_execute('SELECT * FROM vacancies ORDER BY date DESC')
@@ -86,21 +87,21 @@ class DatabaseHandler:
 
     def insert_vacancy(self, vacancy_id: str, vacancy_dict: dict):
         self.cursor_with_commit('INSERT OR IGNORE INTO vacancies '
-                                '(vacancy_id, title, company, info, cities, date, url)'
+                                '(vacancy_id, title, company, info, locations, date, url)'
                                 ' VALUES (?, ?, ?, ?, ?, ?, ?)',
                                 (vacancy_id, vacancy_dict.get('title'), vacancy_dict.get('company'),
-                                 vacancy_dict.get('info'), vacancy_dict.get('cities'), vacancy_dict.get('date'),
+                                 vacancy_dict.get('info'), vacancy_dict.get('locations'), vacancy_dict.get('date'),
                                  vacancy_dict.get('url')))
 
     def insert_vacancies(self, vacancies: dict):
         args = []
         for vacancy_id, vacancy_dict in vacancies.items():
             args.append((vacancy_id, vacancy_dict.get('title'), vacancy_dict.get('company'),
-                         vacancy_dict.get('info'), vacancy_dict.get('cities'), vacancy_dict.get('date'),
+                         vacancy_dict.get('info'), vacancy_dict.get('locations'), vacancy_dict.get('date'),
                          vacancy_dict.get('url')))
 
         self.cursor_with_commit('INSERT OR IGNORE INTO vacancies '
-                                '(vacancy_id, title, company, info, cities, date, url)'
+                                '(vacancy_id, title, company, info, locations, date, url)'
                                 ' VALUES (?, ?, ?, ?, ?, ?, ?)', args=args, many=True)
 
     def change_vacancy_notify_state(self, vacancy_id):

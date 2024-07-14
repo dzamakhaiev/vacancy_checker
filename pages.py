@@ -95,13 +95,40 @@ class DouVacanciesPage(BasePage):
                 company = company.text
                 company = company.strip()
 
-                cities = self.find_element(element=title, locator=locators.DouLocators.CITIES)
-                cities = cities.text
+                locations = self.find_element(element=title, locator=locators.DouLocators.LOCATIONS)
+                locations = locations.text
                 info = self.find_element(element=element, locator=locators.DouLocators.INFO)
                 info = info.text if info else info
 
                 vacancies.update({vacancy_id: {'url': url, 'date': vacancy_date, 'title': vacancy_title,
-                                               'cities': cities, 'info': info, 'company': company}})
+                                               'locations': locations, 'info': info, 'company': company}})
+
+        logger.info('Elements parsed.')
+        return vacancies
+
+
+class LuxoftVacanciesPage(BasePage):
+
+    def get_all_vacancies(self):
+        logger.info('Collect all vacancies from current page.')
+        vacancies = {}
+        element = self.find_element(locator=locators.LuxoftLocators.VACANCIES_CONTAINER)
+        elements = self.find_elements(element=element, locator=locators.LuxoftLocators.VACANCIES)
+
+        if elements:
+            logger.info('Parse all found elements on current page.')
+
+            for element in elements:
+
+                title = self.find_element(element=element, locator=locators.LuxoftLocators.TITLE)
+                vacancy_title = title.text
+                url = element.get_attribute('href')
+                vacancy_id = url.split('-')[-1]
+
+                locations = self.find_element(element=element, locator=locators.LuxoftLocators.LOCATIONS)
+                locations = locations.text
+                vacancies.update({vacancy_id: {'url': url, 'date': date.today(), 'title': vacancy_title,
+                                               'locations': locations, 'info': '', 'company': 'luxoft'}})
 
         logger.info('Elements parsed.')
         return vacancies

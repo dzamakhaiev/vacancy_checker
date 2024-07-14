@@ -13,6 +13,13 @@ class DouLocators(BaseLocators):
     COMPANY = (By.TAG_NAME, 'strong')
     COMPANY_NAME = (By.CLASS_NAME, 'company')
     URL = (By.CLASS_NAME, 'vt')
-    CITIES = (By.CLASS_NAME, 'cities')
+    LOCATIONS = (By.CLASS_NAME, 'cities')
     INFO = (By.CLASS_NAME, 'sh-info')
 
+
+class LuxoftLocators(BaseLocators):
+    VACANCIES_CONTAINER = (By.CLASS_NAME, 'jobs__list')
+    VACANCIES = (By.TAG_NAME, 'a')
+    TITLE = (By.CLASS_NAME, 'subtitle-l')
+    URL = (By.CLASS_NAME, 'vt')
+    LOCATIONS = (By.CLASS_NAME, 'jobs__list__job__details__tags__location')

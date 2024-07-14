@@ -34,13 +34,13 @@ def send_vacancies_to_email(website_name):
     vacancies_db = db_handler.get_not_notified_vacancies()
 
     for vacancy in vacancies_db:
-        vacancy_id, title, company, info, cities, date, url, notified = vacancy
+        vacancy_id, title, company, info, locations, date, url, notified = vacancy
 
         if not bool(notified):
             logger.info(f'New vacancy found: {title}')
 
             body = (f'{title}: {company}\n'
-                    f'{cities}, {date}\n'
+                    f'{locations}, {date}\n'
                     f'{info}\n'
                     f'{url}')
             email_sent = send_email(website_name, body)
@@ -66,10 +66,10 @@ def main_loop():
         filter_vacancies(vacancies)
         db_handler.insert_vacancies(vacancies)
         db_handler.delete_outdated_vacancies()
-        send_vacancies_to_email(website_name)
+        # send_vacancies_to_email(website_name)
 
         logger.info(f'Sleep on {CHECK_INTERVAL} seconds before next check.')
-        sleep(CHECK_INTERVAL)
+        sleep(1)
 
 
 if __name__ == '__main__':
