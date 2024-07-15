@@ -67,6 +67,8 @@ def main_loop():
         page.vacancy_details(vacancies)
         db_handler.insert_vacancies(vacancies)
         db_handler.delete_outdated_vacancies()
+
+        logger.info('Send found vacancies via email.')
         send_vacancies_to_email(website_name)
 
 
