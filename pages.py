@@ -192,3 +192,58 @@ class LuxoftVacanciesPage(BasePage):
 
         logger.info('Elements parsed.')
         return vacancies
+
+
+class GlobalLogicVacanciesPage(BasePage):
+
+    def vacancy_details(self, vacancies: dict):
+        logger.info('Parse vacancy details.')
+
+        for vacancy_id, vacancy_dict in vacancies.items():
+            url = vacancy_dict.get('url')
+            try:
+                self.go_to(url)
+                info = vacancy_dict.get('info')
+
+                info += '\nSKILLS:\n'
+                element = self.find_element(locator=locators.GlobalLogicLocators.SKILLS)
+                info += element.text
+
+                info += '\nREQUIREMENTS:\n'
+                elements = self.find_elements(locator=locators.GlobalLogicLocators.REQUIREMENTS)
+                info += '\n'.join([element.text for element in elements])
+
+                info += '\nRESPONSIBILITIES:\n'
+                elements = self.find_elements(locator=locators.GlobalLogicLocators.RESPONSIBILITIES)
+                info += '\n'.join([element.text for element in elements])
+
+                vacancies[vacancy_id]['info'] = info
+
+            except WebDriverException as e:
+                logger.error(e)
+                self.set_driver()
+
+        logger.info('Details parsed.')
+
+    def get_all_vacancies(self):
+        logger.info('Collect all vacancies from current page.')
+        vacancies = {}
+        elements = self.find_elements(locator=locators.GlobalLogicLocators.VACANCIES)
+
+        if elements:
+            logger.info('Parse all found elements on current page.')
+
+            for element in elements:
+
+                title = self.find_element(element=element, locator=locators.GlobalLogicLocators.TITLE)
+                vacancy_title = title.text
+                url = title.get_attribute('href')
+                vacancy_id = url.split('-')[-1]
+
+                locations = self.find_element(element=element, locator=locators.GlobalLogicLocators.LOCATIONS)
+                locations = locations.text
+                vacancies.update({vacancy_id: {'url': url, 'date': date.today(), 'title': vacancy_title,
+                                               'locations': locations, 'info': '', 'company': 'globallogic'}})
+
+        logger.info('Elements parsed.')
+        return vacancies

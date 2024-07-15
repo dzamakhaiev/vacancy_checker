@@ -28,3 +28,13 @@ class LuxoftLocators(BaseLocators):
     DATE = (By.XPATH, '/html/body/div[10]/div[1]/div[4]/p')
     RESPONSIBILITIES = (By.CLASS_NAME, 'job__grid__about-job__responsabilities__list__item')
     SKILLS = (By.CLASS_NAME, 'job__grid__about-job__skills__list__item')
+
+
+class GlobalLogicLocators(BaseLocators):
+    VACANCIES_CONTAINER = (By.CLASS_NAME, 'spinner-controls')
+    VACANCIES = (By.CLASS_NAME, 'career-pagelink')
+    TITLE = (By.TAG_NAME, 'a')
+    LOCATIONS = (By.CLASS_NAME, 'job-locations')
+    SKILLS = (By.XPATH, '//*[@id="carersearchpage"]/div/div/div[1]/div[1]/div/table/tbody/tr[6]/td[2]')
+    REQUIREMENTS = (By.XPATH, '//*[@id="carersearchpage"]/div/div/div[1]/div[4]/p')
+    RESPONSIBILITIES = (By.XPATH, '//*[@id="carersearchpage"]/div/div/div[1]/div[5]/p')
