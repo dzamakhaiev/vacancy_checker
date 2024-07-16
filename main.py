@@ -1,5 +1,7 @@
 import os
 from time import sleep
+from zoneinfo import ZoneInfo
+from datetime import datetime, timedelta
 from urls_to_check import URLS_TO_CHECK
 from sqlite_handler import DatabaseHandler
 from email_sender import send_email
@@ -50,6 +52,23 @@ def send_vacancies_to_email(website_name):
                 db_handler.change_vacancy_notify_state(vacancy_id)
 
 
+def sleep_dynamic():
+    current_time = datetime.now(tz=ZoneInfo("Europe/Athens"))
+    start_hour = 8
+    end_hour = 22
+
+    if start_hour <= current_time.hour <= end_hour:
+        logger.info(f'Sleep on {CHECK_INTERVAL} seconds before next check.')
+        sleep(CHECK_INTERVAL)
+
+    else:
+        hours = 24 - current_time.hour + start_hour
+        minutes = 60 - current_time.minute + hours * 60
+        seconds = minutes * 60
+        logger.info(f'Sleep on {seconds} seconds till the morning.')
+        sleep(seconds)
+
+
 def main_loop():
 
     for website_name, data in URLS_TO_CHECK.items():
@@ -76,7 +95,6 @@ if __name__ == '__main__':
     while True:
         try:
             main_loop()
-            logger.info(f'Sleep on {CHECK_INTERVAL} seconds before next check.')
-            sleep(CHECK_INTERVAL)
+            sleep_dynamic()
         except KeyboardInterrupt:
             break
