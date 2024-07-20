@@ -63,7 +63,7 @@ def sleep_dynamic():
 
     else:
         hours = 24 - current_time.hour + start_hour
-        minutes = 60 - current_time.minute + hours * 60
+        minutes = 60 - current_time.minute + (hours - 1) * 60  # minus almose full hour "60 - minutes"
         seconds = minutes * 60
         logger.info(f'Sleep on {seconds} seconds till the morning.')
         sleep(seconds)
