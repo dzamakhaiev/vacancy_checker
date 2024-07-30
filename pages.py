@@ -2,7 +2,7 @@ from time import sleep
 from datetime import date
 from selenium.common.exceptions import (NoSuchElementException, StaleElementReferenceException,
                                         TimeoutException, WebDriverException)
-from drivers import ChromeDriver
+from drivers import ChromeDriver, FirefoxDriver
 import locators
 from logger import Logger
 
@@ -23,7 +23,7 @@ def no_such_element_exception(find):
 
 class BasePage:
 
-    def __init__(self, driver: (ChromeDriver,)):
+    def __init__(self, driver: (ChromeDriver, FirefoxDriver)):
         self.driver = None
         self.driver_class = driver
         self.set_driver()
@@ -68,6 +68,10 @@ class BasePage:
         if element.is_displayed():
             element.click()
             sleep(1)
+
+    def close_driver(self):
+        self.driver.close()
+        self.driver.quit()
 
 
 class DouVacanciesPage(BasePage):

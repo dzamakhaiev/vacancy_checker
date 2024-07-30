@@ -89,6 +89,7 @@ def main_loop():
 
         logger.info('Send found vacancies via email.')
         send_vacancies_to_email(website_name)
+        page.close_driver()
 
 
 if __name__ == '__main__':
