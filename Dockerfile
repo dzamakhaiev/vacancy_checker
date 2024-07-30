@@ -1,5 +1,4 @@
-FROM selenium/standalone-chrome
-ENV CHECK_INTERVAL_MINUTES 30
+FROM selenium/standalone-firefox
 ENV TZ=Europe/Athens
 
 RUN sudo apt-get update
