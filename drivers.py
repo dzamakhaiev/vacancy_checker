@@ -17,6 +17,7 @@ class BaseDriver:
         return cls.instance
 
     def __init__(self, driver: (webdriver.Chrome,)):
+        logger.info(f'Platform: {platform.system()}: {platform.release()}')
         logger.info('Initiate driver.')
         self.driver = driver
         self.driver.implicitly_wait(10)
@@ -34,8 +35,6 @@ class BaseDriver:
 class ChromeDriver(BaseDriver):
 
     def __init__(self):
-        logger.info(f'Platform: {platform.system()}: {platform.release()}')
-
         service = webdriver.ChromeService()
         options = webdriver.ChromeOptions()
         options.add_argument('--headless=new')
@@ -48,3 +47,18 @@ class ChromeDriver(BaseDriver):
 
         super().__init__(driver)
         logger.info('Chrome driver started.')
+
+
+class FirefoxDriver(BaseDriver):
+
+    def __init__(self):
+        service = webdriver.FirefoxService()
+        options = webdriver.FirefoxOptions()
+        options.headless = True
+        options.add_argument('--no-sandbox')
+        options.add_argument(f'user-agent={get_random_user_agent()}')
+        options.add_argument('--disable-dev-shm-usage')
+        driver = webdriver.Firefox(service=service, options=options)
+
+        super().__init__(driver)
+        logger.info('Firefox driver started.')
