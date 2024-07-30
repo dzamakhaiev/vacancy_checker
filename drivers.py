@@ -54,10 +54,8 @@ class FirefoxDriver(BaseDriver):
     def __init__(self):
         service = webdriver.FirefoxService()
         options = webdriver.FirefoxOptions()
-        options.headless = True
-        options.add_argument('--no-sandbox')
+        options.add_argument('--headless')
         options.add_argument(f'user-agent={get_random_user_agent()}')
-        options.add_argument('--disable-dev-shm-usage')
         driver = webdriver.Firefox(service=service, options=options)
 
         super().__init__(driver)
