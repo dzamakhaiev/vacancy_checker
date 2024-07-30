@@ -11,6 +11,6 @@ VOLUME ["/vacancy_checker/logs"]
 VOLUME ["/vacancy_checker/database"]
 
 WORKDIR /vacancy_checker
-RUN sudo pip3 install -r requirements.txt -break-system-packages
+RUN sudo pip3 install -r requirements.txt --break-system-packages
 COPY email_data.txt email_data.txt
 CMD sudo git pull && sudo python3 main.py
