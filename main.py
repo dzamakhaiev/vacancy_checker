@@ -10,7 +10,7 @@ from logger import Logger
 
 logger = Logger('main')
 db_handler = DatabaseHandler()
-TIME_ZONE = os.environ.get('TZ', default=ZoneInfo("Europe/Athens"))
+TIME_ZONE = str(os.environ.get('TZ', default=ZoneInfo('Europe/Athens')))
 CHECK_INTERVAL = 60 * int(os.environ.get('CHECK_INTERVAL_MINUTES', default=60))
 msg = 'Interval between checks: {} seconds. ENV variable: {}'.format(
     CHECK_INTERVAL, os.environ.get('CHECK_INTERVAL_MINUTES'))
@@ -54,7 +54,7 @@ def send_vacancies_to_email(website_name):
 
 
 def sleep_dynamic():
-    current_time = datetime.now(tz=TIME_ZONE)
+    current_time = datetime.now(tz=ZoneInfo(TIME_ZONE))
     start_hour = 8
     end_hour = 22
 
