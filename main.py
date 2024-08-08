@@ -1,7 +1,7 @@
 import os
 from time import sleep
 from zoneinfo import ZoneInfo
-from datetime import datetime, timedelta
+from datetime import datetime
 from urls_to_check import URLS_TO_CHECK
 from sqlite_handler import DatabaseHandler
 from email_sender import send_email
@@ -10,7 +10,8 @@ from logger import Logger
 
 logger = Logger('main')
 db_handler = DatabaseHandler()
-CHECK_INTERVAL = 60 * int(os.environ.get('CHECK_INTERVAL_MINUTES', default=30))
+TIME_ZONE = os.environ.get('TZ', default=ZoneInfo("Europe/Athens"))
+CHECK_INTERVAL = 60 * int(os.environ.get('CHECK_INTERVAL_MINUTES', default=60))
 msg = 'Interval between checks: {} seconds. ENV variable: {}'.format(
     CHECK_INTERVAL, os.environ.get('CHECK_INTERVAL_MINUTES'))
 logger.info(msg)
@@ -53,7 +54,7 @@ def send_vacancies_to_email(website_name):
 
 
 def sleep_dynamic():
-    current_time = datetime.now(tz=ZoneInfo("Europe/Athens"))
+    current_time = datetime.now(tz=TIME_ZONE)
     start_hour = 8
     end_hour = 22
 
@@ -63,9 +64,10 @@ def sleep_dynamic():
 
     else:
         hours = 24 - current_time.hour + start_hour
-        minutes = 60 - current_time.minute + (hours - 1) * 60  # minus almose full hour "60 - minutes"
+        minutes = 60 - current_time.minute + (hours - 1) * 60  # minus almost full hour "60 - minutes"
         seconds = minutes * 60
         logger.info(f'Sleep on {seconds} seconds till the morning.')
+        logger.debug(f'Current time: {current_time}\nSleep on {seconds} seconds.')
         sleep(seconds)
 
 

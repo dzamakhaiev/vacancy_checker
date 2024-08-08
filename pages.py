@@ -162,10 +162,14 @@ class LuxoftVacanciesPage(BasePage):
                 info += '\n'.join([element.text for element in elements])
                 vacancies[vacancy_id]['info'] = info
 
-                vacancy_date = self.find_element(locator=locators.LuxoftLocators.DATE).text
-                vacancy_date = vacancy_date.split('/')[::-1]
-                vacancy_date = date(year=int(vacancy_date[0]), month=int(vacancy_date[1]), day=int(vacancy_date[2]))
-                vacancies[vacancy_id]['date'] = vacancy_date
+                try:
+                    vacancy_date = self.find_element(locator=locators.LuxoftLocators.DATE).text
+                    vacancy_date = vacancy_date.split('/')[::-1]
+                    vacancy_date = date(year=int(vacancy_date[0]), month=int(vacancy_date[1]), day=int(vacancy_date[2]))
+                    vacancies[vacancy_id]['date'] = vacancy_date
+                except ValueError as e:
+                    logger.error(e)
+                    vacancies[vacancy_id]['date'] = date.today()
 
             except WebDriverException as e:
                 logger.error(e)
