@@ -255,3 +255,60 @@ class GlobalLogicVacanciesPage(BasePage):
 
         logger.info('Elements parsed.')
         return vacancies
+
+
+class DjinniVacanciesPage(BasePage):
+
+    def vacancy_details(self, vacancies: dict):
+        logger.info('Parse vacancy details.')
+
+        for vacancy_id, vacancy_dict in vacancies.items():
+            url = vacancy_dict.get('url')
+            try:
+                self.go_to(url)
+                info = vacancy_dict.get('info', '')
+                job_conditions = self.find_elements(locator=locators.DjinniLocators.JOB_CONDITIONS)
+
+                for condition in job_conditions:
+                    info += condition.text + '\n'
+
+                full_description = self.find_element(locator=locators.DjinniLocators.FULL_DESCRIPTION)
+                info += full_description.text
+                vacancies[vacancy_id]['info'] = info
+
+            except WebDriverException as e:
+                logger.error(e)
+                self.set_driver()
+
+        logger.info('Details parsed.')
+
+    def get_all_vacancies(self):
+        logger.info('Collect all vacancies from current page.')
+        vacancies = {}
+        element = self.find_element(locator=locators.DjinniLocators.VACANCIES_CONTAINER)
+        elements = self.find_elements(locator=locators.DjinniLocators.VACANCIES, element=element)
+
+        if elements:
+            logger.info('Parse all found elements on current page.')
+
+            for element in elements:
+
+                title = self.find_element(element=element, locator=locators.DjinniLocators.TITLE)
+                vacancy_title = title.text
+
+                url = self.find_element(element=title, locator=locators.DjinniLocators.URL)
+                url = url.get_attribute('href')
+                partial_url = url.split('/')[-2]
+                vacancy_id = partial_url.split('-')[0]
+
+                stat_info = self.find_element(element=element, locator=locators.DjinniLocators.STATISTICS)
+                company_container = self.find_element(element=stat_info,
+                                                      locator=locators.DjinniLocators.COMPANY_CONTAINER)
+                company = company_container.text
+                company = company.strip()
+
+                vacancies.update({vacancy_id: {'url': url, 'date': date.today(), 'title': vacancy_title,
+                                               'locations': None, 'company': company}})
+
+        logger.info('Elements parsed.')
+        return vacancies

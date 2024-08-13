@@ -38,3 +38,14 @@ class GlobalLogicLocators(BaseLocators):
     SKILLS = (By.XPATH, '//*[@id="carersearchpage"]/div/div/div[1]/div[1]/div/table/tbody/tr[6]/td[2]')
     REQUIREMENTS = (By.XPATH, '//*[@id="carersearchpage"]/div/div/div[1]/div[4]/p')
     RESPONSIBILITIES = (By.XPATH, '//*[@id="carersearchpage"]/div/div/div[1]/div[5]/p')
+
+
+class DjinniLocators(BaseLocators):
+    VACANCIES_CONTAINER = (By.CLASS_NAME, 'list-jobs')
+    VACANCIES = (By.CLASS_NAME, 'mb-5')
+    TITLE = (By.TAG_NAME, 'h3')
+    URL = (By.TAG_NAME, 'a')
+    STATISTICS = (By.CLASS_NAME, 'text-secondary')
+    COMPANY_CONTAINER = (By.CLASS_NAME, 'd-inline-flex')
+    FULL_DESCRIPTION = (By.CLASS_NAME, 'job-post-description')
+    JOB_CONDITIONS = (By.CLASS_NAME, 'list-mb-3')

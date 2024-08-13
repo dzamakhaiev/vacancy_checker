@@ -9,5 +9,7 @@ URLS_TO_CHECK = {
                'page': pages.LuxoftVacanciesPage, 'driver': drivers.FirefoxDriver},
     'globallogic': {'url': 'https://www.globallogic.com/ua/career-search-page/'
                            '?keywords=qa+automation&experience=&locations=ukraine&c=&workmodel=Remote',
-                    'page': pages.GlobalLogicVacanciesPage, 'driver': drivers.FirefoxDriver}
+                    'page': pages.GlobalLogicVacanciesPage, 'driver': drivers.FirefoxDriver},
+    'djinni': {'url': 'https://djinni.co/jobs/?all-keywords=qa+automation+python&keywords=qa+automation+python',
+               'page': pages.DjinniVacanciesPage, 'driver': drivers.FirefoxDriver}
 }
