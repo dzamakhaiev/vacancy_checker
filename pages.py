@@ -110,8 +110,13 @@ class DouVacanciesPage(BasePage):
 
                 vacancy_date = self.find_element(element=element, locator=locators.DouLocators.DATE)
                 vacancy_date = vacancy_date.text
-                vacancy_day = int(vacancy_date.split(' ')[0])
                 current_date = date.today()
+
+                try:
+                    vacancy_day = int(vacancy_date.split(' ')[0])
+                except ValueError:
+                    logger.error('Empty date.')
+                    vacancy_day = current_date.day
 
                 if vacancy_day > current_date.day:
                     vacancy_date = date(year=current_date.year, month=current_date.month-1, day=vacancy_day)
