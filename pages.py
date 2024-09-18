@@ -107,14 +107,13 @@ class DouVacanciesPage(BasePage):
             logger.info('Parse all found elements on current page.')
 
             for element in elements:
-
                 vacancy_date = self.find_element(element=element, locator=locators.DouLocators.DATE)
-                vacancy_date = vacancy_date.text
                 current_date = date.today()
 
                 try:
+                    vacancy_date = vacancy_date.text
                     vacancy_day = int(vacancy_date.split(' ')[0])
-                except ValueError:
+                except (ValueError, AttributeError):
                     logger.error('Empty date.')
                     vacancy_day = current_date.day
 
@@ -278,8 +277,9 @@ class DjinniVacanciesPage(BasePage):
                     info += condition.text + '\n'
 
                 full_description = self.find_element(locator=locators.DjinniLocators.FULL_DESCRIPTION)
-                info += full_description.text
-                vacancies[vacancy_id]['info'] = info
+                if full_description:
+                    info += full_description.text
+                    vacancies[vacancy_id]['info'] = info
 
             except WebDriverException as e:
                 logger.error(e)
